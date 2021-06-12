@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Table(name="BENEFICIOS")
 @Component
 public class Beneficio {
-	
+	//¨*
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="ben_id")
@@ -57,6 +57,10 @@ public class Beneficio {
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+	
+	public String g() {
+		return "";
 	}
 
 }

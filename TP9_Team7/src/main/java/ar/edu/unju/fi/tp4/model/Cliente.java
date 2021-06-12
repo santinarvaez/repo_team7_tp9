@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 @Table(name="CLIENTES")
 @Component("clienteObj")
 public class Cliente {
+	//***
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
