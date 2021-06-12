@@ -23,6 +23,7 @@
 											<th> Apellido y Nombre  </th>
 											<th> Fecha de nacimiento </th>
 											<th> Edad </th>
+											<th> Beneficios </th>
 
 										</tr>
 											<tr th:each="c:${clientes}">
@@ -31,7 +32,16 @@
 												<td th:text="${c.mayuscula}"></td>
 												<td th:text="${#temporals.format(c.fechaNacimiento, 'dd/MM/yyyy')}"></td>
 												<td th:text="${c.getEdad}"></td>
-												
+												<td >
+												<span th:each="ben : ${c.beneficios}">
+													<p th:text="${ben.descripcion}"></p>
+												</span>
+												</td>
+												<td> 
+													<a th:href="@{/cliente/editar/}+${c.id}" >Editar</a>
+													<a th:href="@{/cliente/eliminar/}+${c.id}" >Eliminar</a>
+												</td>
+													
 									</table>
 								</div>
 					

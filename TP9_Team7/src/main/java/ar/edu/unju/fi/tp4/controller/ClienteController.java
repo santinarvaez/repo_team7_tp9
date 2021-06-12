@@ -13,13 +13,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import ar.edu.unju.fi.tp4.model.Beneficio;
 import ar.edu.unju.fi.tp4.model.Cliente;
+import ar.edu.unju.fi.tp4.service.IBeneficioService;
 import ar.edu.unju.fi.tp4.service.IClienteService;
 import ar.edu.unju.fi.tp4.service.ICuentaService;
 
 
 @Controller
 public class ClienteController {
+	
+	@Autowired
+	private Beneficio beneficio;
 	
 	@Autowired
 	@Qualifier("clienteMysql")
@@ -29,9 +34,15 @@ public class ClienteController {
 	@Qualifier("cuentaMysql")
 	private ICuentaService cuentaService;
 	
+	@Autowired
+	@Qualifier("beneficioMysql")
+	private IBeneficioService beneficioService;
+	
 	@GetMapping("/cliente/nuevo")
 	public String getNuevoCliente(Model model) {
 		model.addAttribute("cliente", clienteService.getCliente()); 
+		model.addAttribute("beneficio", beneficio);
+		model.addAttribute("beneficiosEncontrados", beneficioService.obtenerBeneficiosEncontrados());
 		return "nuevocliente";
 	}
 	
@@ -45,10 +56,14 @@ public class ClienteController {
 			modelView = new ModelAndView("nuevocliente");
 			List<Cliente> clientes = clienteService.getClientes();
 			modelView.addObject("clientes",clientes);
+			modelView.addObject("beneficio", beneficio);
+			modelView.addObject("beneficiosEncontrados", beneficioService.obtenerBeneficiosEncontrados());
+			
 			return modelView;
 		}else{
 			
 			modelView = new ModelAndView("clientes");
+			cliente.setBeneficios(beneficioService.obtenerBeneficiosEncontrados());
 			clienteService.guardarCliente(cliente);
 			modelView.addObject("clientes", clienteService.getClientes());
 			return modelView;
