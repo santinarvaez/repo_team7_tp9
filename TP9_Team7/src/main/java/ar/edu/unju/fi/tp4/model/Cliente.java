@@ -6,6 +6,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,8 +16,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -57,7 +62,7 @@ public class Cliente {
 	
 	@NotNull(message="Este campo debe ser completado")
 	@Column(name="cte_fecha_nac")
-	@DateTimeFormat(pattern = "yyyy-MM--dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaNacimiento;
 	
 	@Min(value = 12, message="Ingrese un valor mayor a 12")
@@ -74,13 +79,22 @@ public class Cliente {
 	
 	@NotNull(message="Este campo debe ser completado")
 	@Column(name="cte_fecha_ult_compra")
-	@DateTimeFormat(pattern = "yyyy-MM--dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaUltimaCompra;
 	
+	@Valid
 	@Autowired
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cta_id" )
 	private Cuenta cuenta;
+	
+	@ManyToMany()
+	@JoinTable(
+		name = "clientes_beneficios",
+		joinColumns = @JoinColumn(name = "cte_id"),
+		inverseJoinColumns = @JoinColumn(name = "ben_id")
+	)
+	private List<Beneficio> beneficios = new ArrayList<Beneficio>();
 	
 
 	public Long getId() {
@@ -163,7 +177,12 @@ public class Cliente {
 	public Cliente() {
 		super();
 	}
-	
+	public List<Beneficio> getBeneficios() {
+		return beneficios;
+	}
+	public void setBeneficios(List<Beneficio> beneficios) {
+		this.beneficios = beneficios;
+	}
 	
 	public Cliente(String tipoDocumento, int numeroDocumento, String nombreApellido, String email, String password,
 			LocalDate fechaNacimiento, int codigoAreaTelefono, int numeroTelefono, LocalDate fechaUltimaCompra) {
@@ -238,5 +257,9 @@ public class Cliente {
 				+ fechaNacimiento + ", edad=" + edad + ", codigoAreaTelefono=" + codigoAreaTelefono
 				+ ", numeroTelefono=" + numeroTelefono + ", fechaUltimaCompra=" + fechaUltimaCompra + "]";
 	}
+	
+
+	
+	
 	
 }
